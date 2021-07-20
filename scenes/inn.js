@@ -1,12 +1,15 @@
 import { setGameText, addOption } from "../game.js";
-import { pickup, inInventory, INN_ROOM_KEY } from "../inventory.js";
+import { INN_ROOM_KEY, OLD_CLOAK, SMALL_POUCH, BOOTS } from "../objects.js";
 
 export const innRoomStarting = () => {
+  OLD_CLOAK.pickup();
+  SMALL_POUCH.pickup();
+  BOOTS.pickup();
   setGameText(`You wake up one morning not realizing how the fuck you
   ended up on this bed. Groggy and confused you stand up as fast as you can,
   tumbling around the room.`);
   addOption("Try to go out the door", () => {
-    if (inInventory(INN_ROOM_KEY)) {
+    if (INN_ROOM_KEY.isInInventory()) {
       innHallway();
     } else {
       innRoomDoorLocked();
@@ -16,7 +19,7 @@ export const innRoomStarting = () => {
 
 const innRoomDoorLocked = () => {
   setGameText(`Door is locked`);
-  if (inInventory(INN_ROOM_KEY)) {
+  if (INN_ROOM_KEY.isInInventory()) {
     addOption(`Open door`, innHallway);
   } else {
     addOption(`Search bed`, innRoomSearchBed);
@@ -37,9 +40,9 @@ const innRoomSearchCloset = () => {
 };
 
 const innRoomSearchCarpet = () => {
-  setGameText(`You find the <em>${INN_ROOM_KEY}</em>`);
-  pickup(INN_ROOM_KEY);
-  addOption(`Pick up <em>${INN_ROOM_KEY}</em>`, innRoomDoorLocked);
+  setGameText(`You find the <em>${INN_ROOM_KEY.name}</em>`);
+  INN_ROOM_KEY.pickup();
+  addOption(`Pick up <em>${INN_ROOM_KEY.name}</em>`, innRoomDoorLocked);
 };
 
 const innRoomSleep = () => {
